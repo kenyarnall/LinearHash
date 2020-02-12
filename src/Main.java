@@ -1,3 +1,5 @@
+import lvc.cds.LinearHashMap;
+
 import java.util.Random;
 
 public class Main {

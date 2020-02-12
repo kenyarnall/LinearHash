@@ -1,8 +1,9 @@
+package lvc.cds;
+
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
-public class LinearHashMap<K, V> {
+public class LinearHashMap<K, V> implements Map<K, V> {
     private static final int DEF_SIZE = 16;
 
     private Pair<K,V>[] table;
