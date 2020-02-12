@@ -1,11 +1,23 @@
 package lvc.cds;
 
 
+import java.lang.reflect.Array;
+
 public class BubbaHashMap<K,V> implements Map<K,V> {
+    private static final int DEF_SIZE = 16;
     private Pair<K,V>[] table;
     private int[] books;
     private int B;
     private int size;
+
+    public BubbaHashMap() {
+        this(4);
+    }
+
+    public BubbaHashMap(int bucketSize) {
+        B = bucketSize;
+        clear();
+    }
 
     @Override
     public V find(K key) {
@@ -34,7 +46,9 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
 
     @Override
     public void clear() {
-
+        table = (Pair<K,V>[]) Array.newInstance(Pair.class, DEF_SIZE);
+        books = new int[DEF_SIZE];
+        size = 0;
     }
 
     private int hash(K key) {
