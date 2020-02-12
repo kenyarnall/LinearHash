@@ -88,6 +88,10 @@ public class LinearHashMap<K, V> implements Map<K, V> {
         return this.active;
     }
 
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     public void clear() {
         size = 0;
         active = 0;
