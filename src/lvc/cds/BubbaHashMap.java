@@ -113,11 +113,44 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
         size = 0;
     }
 
+    public void print() {
+        System.out.printf("%4d %10s $10s %10s\n", "hash", "key", "value",
+                "books");
+        for (int i=0; i<table.length; ++i) {
+            String key = "NULL";
+            String val = "NULL";
+            if (table[i] != null) {
+                key = table[i].key.toString();
+                val = table[i].value.toString();
+            }
+            String book = booksToString(i);
+            System.out.printf("%4d %10s $10s %10s\n",i,key,val,book);
+        }
+    }
+
+    private String booksToString(int bucket) {
+        StringBuffer sb = new StringBuffer();
+        int b = books[bucket];
+        for (int i=0; i < B; ++i) {
+            sb.append(b % 2 == 1 ? '1' : '0');
+            b /= 2;
+        }
+        return sb.toString();
+    }
+
     private int hash(K key) {
         return Math.abs(key.hashCode()) % table.length;
     }
 
     private void rehash() {
+        var temp = table;
+        table = (Pair<K,V>[]) Array.newInstance(Pair.class,
+                table.length * 2);
+        books = new int[table.length];
+        size = 0;
+        for (int i = 0; i<temp.length; ++i)
+            if (temp[i] != null)
+                this.add(temp[i].key, temp[i].value);
 
     }
 
