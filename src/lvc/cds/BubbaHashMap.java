@@ -31,6 +31,9 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
 
     @Override
     public boolean add(K key, V value) {
+        if (size + 1 >= table.length)
+            rehash();
+
         // step one: check if key is already present
         // search the bucket for this key
         int hash = hash(key);
@@ -58,15 +61,13 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
             if (candidateStart < 0)
                 candidateStart += table.length;
 
-            for (int i = 0; i < B; ++i) {
+            for (int i = 0; i < B - 1; ++i) {
                 // the location of our candidate for shifting. Question: Do
                 // we need to worry about NULL's?
                 int candidate = (candidateStart + i) % table.length;
                 // can we move the value in location candidate? Hash to find the
                 // candidate's bucket
                 var candidatePair = table[candidate];
-                if (candidatePair == null)
-                    System.out.println("we skipped over a null??");
                 int candidateBucket = hash(candidatePair.key);
                 // is index (the spot we want to move candidatePair to) in
                 // candidateBucket?

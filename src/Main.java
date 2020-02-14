@@ -44,7 +44,7 @@ public class Main {
 
     public static void testBubba() {
         BubbaHashMap<String, Integer> bubba = new BubbaHashMap<>();
-        for (int i=0; i<14; ++i) {
+        for (int i=0; i<30; ++i) {
             bubba.add(randString(5), rand.nextInt(100));
         }
         bubba.print();
