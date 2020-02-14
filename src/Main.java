@@ -1,3 +1,4 @@
+import lvc.cds.BubbaHashMap;
 import lvc.cds.LinearHashMap;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ public class Main {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
+    public static void testLinearHashMap() {
         LinearHashMap<String, Integer> map = new LinearHashMap<>();
 
         map.add("bubba", 42);
@@ -39,6 +40,18 @@ public class Main {
 
         System.out.println("zeb = " + map.find("zeb"));
         System.out.println("jeb = " + map.find("jeb"));
+    }
 
+    public static void testBubba() {
+        BubbaHashMap<String, Integer> bubba = new BubbaHashMap<>();
+        for (int i=0; i<14; ++i) {
+            bubba.add(randString(5), rand.nextInt(100));
+        }
+        bubba.print();
+
+    }
+
+    public static void main(String[] args) {
+        testBubba();
     }
 }

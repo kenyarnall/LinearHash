@@ -55,6 +55,9 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
             // if this loop fails to find a spot, we must rehash
             boolean spotFound = false;
             int candidateStart = index - B + 1;
+            if (candidateStart < 0)
+                candidateStart += table.length;
+
             for (int i = 0; i < B; ++i) {
                 // the location of our candidate for shifting. Question: Do
                 // we need to worry about NULL's?
@@ -62,6 +65,8 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
                 // can we move the value in location candidate? Hash to find the
                 // candidate's bucket
                 var candidatePair = table[candidate];
+                if (candidatePair == null)
+                    System.out.println("we skipped over a null??");
                 int candidateBucket = hash(candidatePair.key);
                 // is index (the spot we want to move candidatePair to) in
                 // candidateBucket?
@@ -90,7 +95,7 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
 
         // insert our new value, updating the books
         table[index] = new Pair<>(key, value);
-        markOccupied(hash, dist(index, hash));
+        markOccupied(hash, dist(hash, index));
         size++;
         return true;
     }
@@ -114,17 +119,21 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
     }
 
     public void print() {
-        System.out.printf("%4d %10s $10s %10s\n", "hash", "key", "value",
+        System.out.printf("%5s %10s %10s %10s %10s\n", "index", "key", "hash" +
+                        "(key)",
+                "value",
                 "books");
         for (int i=0; i<table.length; ++i) {
             String key = "NULL";
             String val = "NULL";
+            String hash = "NULL";
             if (table[i] != null) {
                 key = table[i].key.toString();
+                hash = "" + hash(table[i].key);
                 val = table[i].value.toString();
             }
             String book = booksToString(i);
-            System.out.printf("%4d %10s $10s %10s\n",i,key,val,book);
+            System.out.printf("%5d %10s %10s %10s %10s\n",i,key,hash,val,book);
         }
     }
 
@@ -158,15 +167,21 @@ public class BubbaHashMap<K,V> implements Map<K,V> {
     // (in the table, not in the bucket) where key is found, or -1 if it isn't
     // present.
     private int find(K key, int bucket) {
-        // todo
+        for (int i=0; i<B; ++i) {
+            int pos = (bucket+i) % table.length;
+            if (isOccupied(bucket, i) && table[pos].key.equals(key))
+                return pos;
+        }
         return -1;
     }
 
     // return the distance between b and s in the table. That is,
     // how far do you have to move to get FROM b TO s.
     private int dist(int b, int s) {
-        // todo
-        return 0;
+        if (s >= b)
+            return s - b;
+        else
+            return s + table.length - b;
     }
 
     // check whether bit "slot" is marked with a 1 in books[bucket]
